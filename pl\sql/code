@@ -1,0 +1,422 @@
+set serveroutput on;
+--Created anime table
+Create table anime(
+ANIME_ID INTEGER NOT NULL PRIMARY KEY,
+ANIME_Name  VARCHAR2(400) NOT NULL,
+Score FLOAT,
+Genders VARCHAR2(400),
+EnglishName VARCHAR2(400),
+JapaneseName VARCHAR2(400),
+ANIME_Type VARCHAR2(100),
+Episodes NUMBER,
+Aired VARCHAR2(400),
+Premiered VARCHAR2(400),
+Producers VARCHAR2(400),
+Licensors VARCHAR2(400),
+Studios VARCHAR2(400),
+ANIME_Source VARCHAR2(400),
+ANIME_Duration VARCHAR2(400),
+Rating VARCHAR2(400),
+Ranked NUMBER,
+Popularity NUMBER,
+Members NUMBER,
+Favorites NUMBER,
+Watching NUMBER,
+Completed NUMBER,
+OnHold NUMBER,
+Dropped NUMBER,
+PlantoWatch NUMBER,
+Score10 NUMBER,
+Score9 NUMBER,
+Score8 NUMBER,
+Score7 NUMBER,
+Score6 NUMBER,
+Score5 NUMBER,
+Score4 NUMBER,
+Score3 NUMBER,
+Score2 NUMBER,
+Score1 NUMBER,
+image  BLOB
+);
+select * from anime;
+drop table anime;
+
+--created user acc it is admin
+create table useracc(
+u_email VARCHAR2(400) NOT NULL PRIMARY KEY,
+f_name  VARCHAR2(400) NOT NULL,
+l_name  VARCHAR2(400) NOT NULL,
+bday  DATE NOT NULL,
+psw  VARCHAR2(400) NOT NULL
+);
+select * from useracc;
+
+--created anime_log table
+Create table anime_Log(
+ID INTEGER NOT NULL PRIMARY KEY,
+old_ANIME_ID INTEGER,
+new_ANIME_ID INTEGER,
+Old_episodes NUMBER,
+New_episodes NUMBER,
+operation_date date,
+action varchar2(250),
+author varchar2(250)
+);
+SELECT * from anime_log;
+
+--created table useracclog
+select * from useracclog;
+Create table useraccLog(
+ID INTEGER NOT NULL PRIMARY KEY,
+old_u_email VARCHAR2(400), 
+new_u_email VARCHAR2(400),
+old_f_name  VARCHAR2(400),
+new_f_name  VARCHAR2(400),
+old_l_name  VARCHAR2(400),
+new_L_name  VARCHAR2(400),
+old_bday  DATE,
+new_bday  DATE,
+old_psw  VARCHAR2(400),
+new_psw  VARCHAR2(400),
+operation_date date,
+action varchar2(250),
+author varchar2(250)
+);
+--Function-1,Function-2,Package-1: Total number of anime and anime type
+CREATE OR REPLACE PACKAGE anime_inf AS
+FUNCTION totalAnimes RETURN number;
+FUNCTION total_animeByType(type_in In VARCHAR2) RETURN number;
+END anime_inf;
+CREATE OR REPLACE PACKAGE BODY anime_inf AS
+FUNCTION totalAnimes
+RETURN number IS
+   total number := 0;
+BEGIN
+   SELECT count(anime_id) into total
+   FROM anime;
+    
+   RETURN total;
+END;
+function total_animeByType(type_in In VARCHAR2)
+return number is
+c_number number;
+cursor animeType_cur is
+ 	SELECT count(anime_id)
+ 	FROM anime
+ 	WHERE anime_type = type_in;
+BEGIN
+   open animeType_cur;
+   fetch animeType_cur into c_number;
+ 
+   close animeType_cur;
+RETURN c_number;
+
+EXCEPTION     	 
+WHEN OTHERS THEN     	 
+ raise_application_error(-20001,'An error was encountered - '||SQLCODE||' -ERROR- '||SQLERRM);
+END;
+
+END anime_inf;
+DECLARE
+   c number;
+BEGIN
+   c := anime_inf.totalAnimes();
+  dbms_output.put_line('Total number of Animes: ' || c);
+   dbms_output.put_line('Total number of anime type TV: ' || anime_inf.total_animeByType('TV'));
+   dbms_output.put_line('Total number of anime type OVA: ' ||  anime_inf.total_animeByType('OVA'));
+   dbms_output.put_line('Total number of anime type Movie: ' ||  anime_inf.total_animeByType('Movie'));
+   dbms_output.put_line('Total number of anime type Special: ' ||  anime_inf.total_animeByType('Special'));
+   
+END;
+
+--Package-2: Procedure-1: top-18 animelist
+create or replace PACKAGE top_anime AS
+PROCEDURE top_anime_18(myrc out sys_refcursor);
+
+END top_anime;
+create or replace PACKAGE BODY top_anime AS
+PROCEDURE top_anime_18(myrc out sys_refcursor) IS
+BEGIN
+open myrc for  select ANIME_ID,ANIME_NAME,JAPANESENAME,IMAGE from (
+                        select * from anime
+                        order by popularity desc)
+                        where rownum <= 18;
+END;
+END top_anime;
+DECLARE
+v_jname         anime.japanesename%TYPE;
+v_id         anime.anime_id%TYPE;
+v_ename         anime.anime_name%TYPE;
+v_img           anime.image%TYPE;
+c_a sys_refcursor;
+BEGIN
+
+   top_anime.TOP_ANIME_18(c_a);
+     LOOP
+        FETCH c_a INTO v_id,v_ename,v_jname,v_img;
+        EXIT WHEN c_a%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE(v_ename);
+    END LOOP;
+END;
+
+
+--Package-3: 4-> Procedure: sorting anime by episodes, genders, rating
+CREATE OR REPLACE PACKAGE top_sorted_anime AS
+procedure top_anime_genders(p_genders anime.genders%TYPE,myrc out sys_refcursor);
+procedure top_anime_rating(p_genders anime.rating%TYPE,myrc out sys_refcursor);
+procedure top_anime_max_ep(myrc out sys_refcursor);
+procedure top_anime_min_ep(myrc out sys_refcursor);
+END top_sorted_anime;
+create or replace PACKAGE BODY top_sorted_anime AS
+
+PROCEDURE top_anime_genders(p_genders anime.genders%TYPE,myrc OUT SYS_REFCURSOR) IS
+BEGIN
+OPEN myrc FOR SELECT ANIME_ID,ANIME_NAME,JAPANESENAME,IMAGE FROM( select * from anime where genders like '%' || p_genders 
+  or genders like '%' || p_genders || '%' or genders  like p_genders || '%'  order by popularity desc)WHERE ROWNUM<= 18;
+END; 
+
+PROCEDURE top_anime_rating(p_genders anime.rating%TYPE,myrc out sys_refcursor) IS
+BEGIN
+OPEN myrc FOR SELECT ANIME_ID,ANIME_NAME,JAPANESENAME,IMAGE FROM( select * from anime where RATING  = p_genders  order by popularity desc)WHERE ROWNUM<= 18;
+END; 
+
+PROCEDURE top_anime_max_ep(myrc out sys_refcursor) IS
+BEGIN
+OPEN myrc FOR  SELECT ANIME_ID,ANIME_NAME,JAPANESENAME,IMAGE,EPISODES FROM(select * from anime
+                                   order by episodes desc) WHERE ROWNUM <= 18;
+END; 
+
+PROCEDURE top_anime_min_ep(myrc out sys_refcursor) IS
+BEGIN
+OPEN myrc FOR  SELECT ANIME_ID,ANIME_NAME,JAPANESENAME,IMAGE,EPISODES FROM(select * from anime
+                                   order by episodes asc) WHERE ROWNUM <= 18;
+END;
+END top_sorted_anime;
+--top_anime_genders
+DECLARE
+v_jname         anime.japanesename%TYPE;
+v_id         anime.anime_id%TYPE;
+v_ename         anime.anime_name%TYPE;
+v_img           anime.image%TYPE;
+c_a sys_refcursor;
+BEGIN
+
+   top_sorted_anime.TOP_ANIME_GENDERS('Action',c_a);
+     LOOP
+        FETCH c_a INTO v_id,v_ename,v_jname,v_img;
+        EXIT WHEN c_a%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE(v_ename);
+    END LOOP;
+END;
+
+--top_anime_rating
+DECLARE
+v_jname         anime.japanesename%TYPE;
+v_id         anime.anime_id%TYPE;
+v_ename         anime.anime_name%TYPE;
+v_img           anime.image%TYPE;
+c_a sys_refcursor;
+BEGIN
+
+   top_sorted_anime.top_anime_rating('PG-13 - Teens 13 or older',c_a);
+     LOOP
+        FETCH c_a INTO v_id,v_ename,v_jname,v_img;
+        EXIT WHEN c_a%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE(v_ename);
+    END LOOP;
+END;
+
+--top_anime_max_ep
+DECLARE
+v_jname         anime.japanesename%TYPE;
+v_id         anime.anime_id%TYPE;
+v_ename         anime.anime_name%TYPE;
+v_img           anime.image%TYPE;
+v_ep           anime.episodes%TYPE;
+c_a sys_refcursor;
+BEGIN
+
+   top_sorted_anime.top_anime_max_ep(c_a);
+     LOOP
+        FETCH c_a INTO v_id,v_ename,v_jname,v_img,v_ep;
+        EXIT WHEN c_a%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE(v_ename||' '||v_ep);
+    END LOOP;
+END;
+
+--top_anime_min_ep
+DECLARE
+v_jname         anime.japanesename%TYPE;
+v_id         anime.anime_id%TYPE;
+v_ename         anime.anime_name%TYPE;
+v_img           anime.image%TYPE;
+v_ep           anime.episodes%TYPE;
+c_a sys_refcursor;
+BEGIN
+
+   top_sorted_anime.top_anime_min_ep(c_a);
+     LOOP
+        FETCH c_a INTO v_id,v_ename,v_jname,v_img,v_ep;
+        EXIT WHEN c_a%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE(v_ename||' '||v_ep);
+    END LOOP;
+END;
+
+--CURSORE-1 : max episodes anime
+DECLARE
+   CURSOR max_anime IS 
+    select * from(select anime_name, episodes from anime
+    order by episodes desc) where rownum <= 18;
+   v_anime_name anime.anime_name%TYPE;
+   v_episodes anime.episodes%TYPE;
+BEGIN
+   OPEN max_anime;
+   LOOP
+   FETCH max_anime INTO  v_anime_name, v_episodes;
+   EXIT WHEN  max_anime%NOTFOUND;
+   DBMS_OUTPUT.PUT_LINE(v_anime_name || ' . Number of episodes --> ' || v_episodes);
+   END LOOP;
+   IF  max_anime%ROWCOUNT = 0 THEN DBMS_OUTPUT.PUT_LINE('NO ANIME FOUND');
+   END IF;
+   CLOSE max_anime;
+END;
+
+--CURSORE-2 : min episodes anime 
+DECLARE
+   CURSOR min_anime IS
+   select * from( select anime_name, episodes from anime
+   order by episodes asc) where rownum <= 18;
+   v_anime_name anime.anime_name%TYPE;
+   v_episodes anime.episodes%TYPE;
+BEGIN
+   OPEN min_anime;
+   LOOP
+   FETCH min_anime INTO  v_anime_name, v_episodes;
+   EXIT WHEN  min_anime%NOTFOUND;
+   DBMS_OUTPUT.PUT_LINE(v_anime_name || '.   Number of episodes --> ' || v_episodes);
+   END LOOP;
+   IF  min_anime%ROWCOUNT = 0 THEN DBMS_OUTPUT.PUT_LINE('NO ANIME FOUND');
+   END IF;
+   CLOSE min_anime;
+END;
+
+--CURSORE-3 : anime by genders 
+DECLARE
+  CURSOR find_anime(p_genders anime.genders%TYPE) IS
+  SELECT anime_name FROM anime WHERE genders LIKE '%' || p_genders 
+  OR genders LIKE '%' || p_genders || '%' OR genders  LIKE p_genders || '%';
+  v_name anime.anime_name%TYPE;
+BEGIN
+  OPEN find_anime('Action');
+  LOOP
+   FETCH find_anime INTO v_name;
+   EXIT WHEN find_anime%NOTFOUND;
+   DBMS_OUTPUT.PUT_LINE(v_name);
+   END LOOP;
+   IF find_anime%ROWCOUNT = 0 THEN DBMS_OUTPUT.PUT_LINE('NO ANIME FOUND');
+   END IF;
+END;
+
+--CURSORE-4 : anime by rating 
+DECLARE
+  CURSOR find_anime(p_rating anime.rating%TYPE) IS
+  select ANIME_NAME from anime where RATING like '%' || p_rating || '%' order by popularity desc;
+  v_name anime.anime_name%TYPE;
+BEGIN
+  OPEN find_anime('PG-13 - Teens 13 or older');
+  LOOP
+   FETCH find_anime INTO v_name;
+   EXIT WHEN find_anime%NOTFOUND;
+   DBMS_OUTPUT.PUT_LINE(v_name);
+   END LOOP;
+   IF find_anime%ROWCOUNT = 0 THEN DBMS_OUTPUT.PUT_LINE('NO ANIME FOUND');
+   END IF;
+END;
+
+--Trigger-1: when update episodes
+create or replace TRIGGER aft_update AFTER UPDATE ON anime FOR EACH ROW
+DECLARE
+   v_id NUMBER;
+BEGIN
+SELECT max(ID) INTO v_id FROM  anime_LOG;
+   IF v_id IS NULL 
+   THEN v_id:=1;
+   ELSE v_id:=v_id+1;
+   END IF;
+INSERT INTO anime_LOG
+VALUES (v_id, :old.anime_id, :new.anime_id, :old.episodes, :new.episodes, SYSDATE, 'UPDATE', USER);
+END;
+
+--Trigger-2: after delete anime
+create or replace TRIGGER aft_delete AFTER DELETE ON anime FOR EACH ROW
+DECLARE
+   v_id NUMBER;
+BEGIN
+SELECT max(ID) INTO v_id FROM  anime_LOG;
+   IF v_id IS NULL 
+   THEN v_id:=1;
+   ELSE v_id:=v_id+1;
+   END IF;
+INSERT INTO anime_LOG
+VALUES (v_id, :old.anime_id, :new.anime_id, :old.episodes, :new.episodes, SYSDATE, 'DELETE', USER);
+END;
+drop trigger aft_delete;
+--Trigger-3: after insert admin
+create or replace TRIGGER aft_insert AFTER INSERT ON useracc FOR EACH ROW
+DECLARE
+   v_id NUMBER;
+BEGIN
+SELECT max(ID) INTO v_id FROM  useraccLOG;
+   IF v_id IS NULL 
+   THEN v_id:=1;
+   ELSE v_id:=v_id+1;
+   END IF;
+INSERT INTO useraccLOG
+VALUES (v_id, :old.u_email, :new.u_email, :old.f_name, :new.f_name, :old.l_name, :new.l_name, 
+        :old.bday, :new.bday, :old.psw, :new.psw, SYSDATE, 'INSERT', USER);
+END;
+
+--Packages-4,dySQL-1,dySql-2 to update and delete anime
+create or replace PACKAGE anime_del_up AS
+PROCEDURE update_episodes(p_anime_id anime.anime_id%TYPE,
+                          p_episodes anime.episodes%TYPE);
+PROCEDURE delete_anime(p_anime_id anime.anime_id%TYPE);
+END anime_del_up;
+create or replace PACKAGE BODY anime_del_up AS
+--update 
+PROCEDURE update_episodes(p_anime_id anime.anime_id%TYPE,
+                                            p_episodes anime.episodes%TYPE) 
+IS v_dynamic_q VARCHAR2(300);
+BEGIN 
+   v_dynamic_q := 'UPDATE anime SET episodes = ' || p_episodes || ' WHERE  anime_id = ' || p_anime_id;
+   EXECUTE IMMEDIATE v_dynamic_q;
+END update_episodes; 
+
+--delete
+ PROCEDURE delete_anime(p_anime_id anime.anime_id%TYPE) 
+IS 
+BEGIN 
+ EXECUTE IMMEDIATE 'DELETE FROM anime WHERE anime_id = ' || p_anime_id;
+END delete_anime; 
+
+END anime_del_up;
+
+--Procedure, dysql-3 to insert admin
+create or replace PROCEDURE insert_ad(p_email IN useracc.u_email%TYPE, p_fname IN useracc.f_name%TYPE,
+                                         p_lname IN useracc.l_name%TYPE,  p_bday IN useracc.bday%TYPE,
+                                         p_psw IN useracc.psw%TYPE) IS 
+BEGIN 
+   EXECUTE IMMEDIATE 'INSERT INTO useracc(u_email,f_name,l_name,bday,psw) VALUES(:p_email,:p_fname,:p_lname,:p_bday,:psw)' 
+   using p_email, p_fname,p_lname,p_bday,p_psw;
+END insert_ad; 
+BEGIN
+  insert_ad('example2@gmail.com' , 'Fname', 'Lname', '12-Apr-21', '129');
+END;
+
+ alter table anime add(
+score as ((score1*1+score2*2+score3*3+score4*4+score5*5+score6*6+score7*7+score8*8+score9*9+score10*10)
+              /(score1+score2+score3+score4+score5+score6+score7+score8+score9+score10))
+);
+alter table anime add(
+Audience_interest as (FAVORITES - DROPPED)
+);
