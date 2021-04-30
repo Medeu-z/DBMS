@@ -14,7 +14,7 @@
     
      function overOffl(){
      	 n  = window.location.href;
-       window.location.href = "http://localhost/animefp/public/";
+       window.location.href = "http://localhost/animefp/public/test";
      	
 
     } 

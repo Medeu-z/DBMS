@@ -32,6 +32,22 @@ class AnimeController extends Controller
     }
 
 
+ public function search3(Request  $request)
+    { $this->validate($request, [
+         'anime_search'=>'required'
+    ]);
+     $name = $request->input('anime_search');
+       return  view('oneAnimeUser',["aname" => $name]);
+    }
+       public function search4(Request  $request)
+    { $this->validate($request, [
+         'anime_s'=>'required'
+    ]);
+     $name = $request->input('anime_s');
+       return  view('oneAnimeUser',["aname" => $name]);
+    }
+
+
 
 
 

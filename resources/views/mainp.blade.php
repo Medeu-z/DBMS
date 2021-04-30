@@ -23,7 +23,7 @@
     }
     function out(){
        n  = window.location.href;
-       window.location.href = "http://localhost/animefp/public/";
+       window.location.href = "http://localhost/animefp/public/test";
     } 
     function al(){
        n  = window.location.href;
@@ -278,8 +278,10 @@ oci_close($conn);
           <b>Users: </b>6k (2020)<br>
           
        </address>
+                <div style="text-align: center;">  <h4>Types of Anime</h4></div>
 
-              <div style="background-color: hsla(258, 39%, 44%, 0.2);" >
+              <div style="background-color: hsla(258, 39%, 44%, 0.2);margin-top: -10px; " >
+              
                 <canvas id="Chart1" width="500" height="250"></canvas>
               </div>
             

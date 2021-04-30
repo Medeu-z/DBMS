@@ -42,7 +42,7 @@
     }
      function al(){
        n  = window.location.href;
-       window.location.href = "http://localhost/animefp/public/al";
+       window.location.href = "http://localhost/animefp/public/test";
     }
    
 </script>
@@ -98,7 +98,8 @@
     margin-left: 30px;
    }
    .m hr{background-color:white; height: 0.5px; margin-left: 93px;width: 90%; margin-top: -10px;}
-   .w{display: inline-flex;}
+   .w{display: inline-flex;
+    font-size: 0.8em;}
   
    p{
     width: 200px;
@@ -156,20 +157,20 @@
  <header>
       <div><h3 style="color: white;">World Of Anime</h3></div>
         <div> 
-                 <form action="{{  route('search')}}" method = "get"> {{ csrf_field() }}
+                 <form action="{{  route('search3')}}" method = "get"> {{ csrf_field() }}
                 <input type="text" id="anime_search" name="anime_search" style="width: 400px;"  placeholder="Search anime..." value="" required>
                 <button class="btn btn-default" type="submit"><i class='fa fa-search' style="color: white;"></i></button>
               </form>
             
         </div>
         <a onclick="al()" >AnimeList</a>
-        <a  onclick="out()" style="width: 100px;">LogOut</a>
+       
     </header>
   
             
 
 
-<div class="m" style="margin-top: 100px;">
+<div class="m" style="margin-top: 50px;">
 
       
           <div style="width: 30%;padding: 3%;"><?php
@@ -209,22 +210,13 @@ oci_execute($s, OCI_DEFAULT);
  <!--  
      <div style="background-color: white;color: black;text-align: center;font-family: Arial, Helvetica, sans-serif; width: 70%;border-radius: 5px;margin-top: 10px;margin-left: 50px;"><h4 id="employeeID" ><?php echo $id ?></h4></div>
  -->
-      <div class="w" style="margin-top: 20px;">
- 
-           <button  type="button" class="btn"  style="background-color: black;color: white;margin-left: 5px;" onclick="overOnD()">Delete Anime</button>
-              
-             <button  type="button" class="btn" id="button2"  style="background-color: black;color: white;margin-left: 5px;" onclick="overOn()">Edit Episode</button>
-             </div> 
+<div style="text-align: center;color: white;"><h5 id="FName"><?php echo $name ?></h5><?php echo $jname ?></div>
 </div>    
              
 
 <!-- INSERT -->
    <!-- take inserted attribites value from employee table and do document.getElementById("id").innerHTML to h3 tags  -->
-   <div id="cont" style="padding-top:3%;width: 70%; margin-left: 50px;">
-    <div class="w"><p>English Name:</p><h5 id="FName"><?php echo $name ?></h5></div>
-    <hr><br>
-    <div class="w"><p>Japanes Name:</p><h5 id="LName"><?php echo $jname ?></h5></div>
-    <hr><br>
+   <div id="cont" style="padding-top:3%;width: 60%; margin-left: 50px;">
     <div class="w"><p>Producers:</p><h5 id="Email"><?php echo $pro ?></h5></div>
     <hr><br>
     <div class="w"><p>Rating:</p><h5 id="PhonNumber"><?php echo $rating ?></h5></div>
@@ -237,10 +229,12 @@ oci_execute($s, OCI_DEFAULT);
     <hr><br>
     <div class="w"><p>Score: </p><h5 id="TotalS"><?php echo $score ?></h5></div>
     <hr><br>
-   </div> 
-</div>
- <div class="m" style="background-color: hsla(0, 5%, 80%, 0.9);width: 100%;">
+     <div class="m" style="background-color: hsla(0, 5%, 80%, 0.9);width: 100%;">
     <canvas id="myChart" width="400" height="100">></canvas></div>
+   </div> 
+
+</div>
+ 
 <script type="text/javascript">
    var ctx = document.getElementById("myChart");
    var myChart = new Chart(ctx, {
@@ -279,46 +273,7 @@ oci_execute($s, OCI_DEFAULT);
         
           ?>
 
-
-
-<!-- UPDATE -->
-<div id="overlay1" class="ov1 ov" >
-  <div id="bg" class="bg1">
    
-        <h6>Please fill in this form to update an episode.</h6>
-    <hr style="background-color:black; height: 0.5px; margin-top: -5px; ">
-   
-    <form action="{{  route('upda')}}" method = "post" >
-            {{ csrf_field() }}
-            <input type="NUMBER" name="aid" value="<?php echo $id ?>" style="display: none;">
-              <div class="w"><p>Episodes:</p><input style="width: 50%;"type="NUMBER" name="ep" required></div>
-           <div style="display: inline-flex;">
-          <div><button  type="submit" name="add" class="btn btn-sm" id="su" style="background-color: black;color: white;margin-left: 5px;">Update</button></div>
-        </form>
-       <button  type="button" class="btn btn-sm"  onclick="overOffC()" style="background-color:black;color: white;margin-left: 50px;">Cancel</button></div>
-  </div>
-  </div>
-
-
-
-<!-- DELETE -->
- <div id="overlay2" class="ov ov2">
-      <div class="bg1">
-    <h2 style=" font-family:sans-serif;text-align: center;">Confirm your action!</h2>
-       
-        
-          <div style="display: inline-flex;">
-            <div>
-              <button type="button" class="btn btn-sm" onclick="overOffD()" style="background-color:white;color:black;margin-left:                               45px;">Cancel</button>
-            </div>
-           <div>
-            <form action="{{  route('dela')}}" method = "POST"> {{ csrf_field() }}
-             <input type="NUMBER" name="daid" value="<?php echo $id ?>" style="display: none;">            <button  type="submit" class="btn btn-sm"  style="background-color: white;color: black;margin-left: 5px;">Delete</button>
-            </form>
-            </div>
-            </div>
-        </div>
-    </div>
 
 </body>
 </html>

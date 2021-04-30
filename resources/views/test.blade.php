@@ -7,24 +7,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Cinema</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <title>Cinema</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <meta charset="utf-8">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-
-		<script>
-	function animeN(){
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script>
+  function animeN(){
       var n =  document.getElementById("anime_search").value;
       n1  = window.location;
        window.location = n1+"/"+n;
     }
-    function out(){
-       n  = window.location.href;
-       window.location.href = "http://localhost/animefp/public/test";
-    } 
+    function LogIn(){
+       
+          window.location = "http://localhost/animefp/public/login";
+
+    }
    
     function overOn(){
       $("#overlay1").show();
@@ -45,8 +46,8 @@
     }
    
 </script>
-	<style type="text/css">
-		body, html {
+  <style type="text/css">
+    body, html {
            height: 100%;
            margin: 0;
            font-family: Arial, Helvetica, sans-serif;
@@ -67,20 +68,20 @@
       padding: 10px 10% 10px 10%;
       box-shadow:  0 2px 3px hsl(0, 0%, 85%);
     }
-		 .button12{
+     .button12{
          display: flex;
          justify-content: flex-end;
          width: 100%;
          padding: 5px;
          }
           a{
-          	color: white;
+            color: white;
           }
-		.button1{
-			background-color: white;
-			color: black;
-		}
-	body{
+    .button1{
+      background-color: white;
+      color: black;
+    }
+  body{
     background-image: url('{{ asset('img/rsz_ani1.jpg') }}');
      background-repeat: no-repeat;
   background-attachment: fixed;
@@ -104,7 +105,7 @@
          background-color: hsla(0, 0%, 70%, 0.5);
          display: flex;
          flex-direction: column;
-         text-align: center;
+         
          color: white;
       }
       .main{
@@ -132,7 +133,7 @@
       }
       .m hr{background-color:white; height: 0.5px; margin-left: 93px;width: 50%; margin-top: -10px;}
       .w{display: inline-flex;}
-  	
+    
       
       .m p{width: 100px;color: black; }
        .bg1 {margin-top: 160px;
@@ -187,28 +188,74 @@
         margin-bottom: 3px;
         background-color: white;
       }
-	</style>
+  </style>
 </head>
 <body>
       <header>
       <div><h3 style="color: white;">World Of Anime</h3></div>
         <div> 
-                 <form action="{{  route('search')}}" method = "get"> {{ csrf_field() }}
+                 <form action="{{  route('search3')}}" method = "get"> {{ csrf_field() }}
                 <input type="text" id="anime_search" name="anime_search" style="width: 400px;"  placeholder="Search anime..." value="" required>
                 <button class="btn btn-default" type="submit"><i class='fa fa-search' style="color: white;"></i></button>
               </form>
             
         </div>
-     
-        <a  onclick="out()" style="width: 100px;">LogOut</a>
+        <button  type="button" id="button2" class="btn btn-default" onclick="LogIn()">Admin</button>
     </header>
 
 
 
   <div style="display: inline-flex;" >
-   
-     <main >
+    
+     <main>
+      <div style="display: flex;flex-direction: column;color: black;">
+      <div style=""><h3>ABOUT US</h3></div>
+      <hr class="class4" style="margin-top: 5px;">
+
+      <h6 class="ch6" style="background-color: white;">AnimeInfo is a web application where you can see popular anime and find information about them.</h6><hr class="hrc">
+            <div style="display: inline-flex;">   <address style="margin-right: 5px;">
+         <b> CEO: </b><a href="https://en.wikipedia.org/wiki/Dustin_Moskovitz">Dustin Moskovitz</a><br>
+         <b> Founded:</b> 2008<br>
+
+  <!--  FIND TOTAL NUMBER OF ANIME AND ANIME TYPE   -->   
+ <?php   
+         $s = oci_parse($conn, "begin :ret :=anime_inf.totalAnimes();
+                                      :ret1:=anime_inf.total_animeByType('TV'); 
+                                      :ret2:=anime_inf.total_animeByType('OVA');
+                                      :ret3:=anime_inf.total_animeByType('Movie');
+                                      :ret4:=anime_inf.total_animeByType('Special');
+                                     end;");
+              oci_bind_by_name($s, ':ret', $r, 200);
+              oci_bind_by_name($s, ':ret1', $r1, 200);
+              oci_bind_by_name($s, ':ret2', $r2, 200);
+              oci_bind_by_name($s, ':ret3', $r3, 200);
+              oci_bind_by_name($s, ':ret4', $r4, 200);
+              oci_execute($s, OCI_DEFAULT);
+             ?>
+
+          <b>Number of anime: </b><?php echo $r; ?><br>
+
+<?php
+oci_free_statement($s);
+
+?>
+
+          <b>Users: </b>6k (2020)<br>
+          
+       </address>
+               
+
+              <div style="background-color: hsla(258, 39%, 44%, 0.2);margin-top: -10px; " >
+               <div style="text-align: center;">  <h4>Types of Anime</h4></div>
+                <canvas id="Chart1" width="500" height="250"></canvas>
+              </div>
+            </div>
+         
+            
+    </div>
+
       <div> <h3>TOP-18 Anime</h3></div>
+      <hr class="class4" style="margin-top: 5px;">
     <div class="main" id="TOP-18_pop">
     <?php
     $curs1 = oci_new_cursor($conn);
@@ -227,7 +274,7 @@
          ?>
        
                <div class="maindiv">
-                <form action="{{  route('search2')}}" method = "get"> 
+                <form action="{{  route('search4')}}" method = "get"> 
                 {{ csrf_field() }}
                 <input type="text"  name="anime_s" style="display: none;" value="<?php echo $name ?>" required>
                 <button type="submit" class="btn" style="float: right;"><i class="fa fa-sign-in" aria-hidden="true"></i></button> </form>
@@ -264,7 +311,7 @@
          ?>
        
                <div class="maindiv">
-                <form action="{{  route('search2')}}" method = "get"> 
+                <form action="{{  route('search4')}}" method = "get"> 
                 {{ csrf_field() }}
                 <input type="text"  name="anime_s" style="display: none;" value="<?php echo $name ?>" required>
                 <button type="submit" class="btn" style="float: right;"><i class="fa fa-sign-in" aria-hidden="true"></i></button> </form>
@@ -300,7 +347,7 @@
          ?>
        
                <div class="maindiv">
-                <form action="{{  route('search2')}}" method = "get"> 
+                <form action="{{  route('search4')}}" method = "get"> 
                 {{ csrf_field() }}
                 <input type="text"  name="anime_s" style="display: none;" value="<?php echo $name ?>" required>
                 <button type="submit" class="btn" style="float: right;"><i class="fa fa-sign-in" aria-hidden="true"></i></button> </form>
@@ -337,7 +384,7 @@
          ?>
        
                <div class="maindiv">
-                <form action="{{  route('search2')}}" method = "get"> 
+                <form action="{{  route('search4')}}" method = "get"> 
                 {{ csrf_field() }}
                 <input type="text"  name="anime_s" style="display: none;" value="<?php echo $name ?>" required>
                 <button type="submit" class="btn" style="float: right;"><i class="fa fa-sign-in" aria-hidden="true"></i></button> </form>
@@ -375,7 +422,7 @@
          ?>
        
                <div class="maindiv">
-                <form action="{{  route('search2')}}" method = "get"> 
+                <form action="{{  route('search4')}}" method = "get"> 
                 {{ csrf_field() }}
                 <input type="text"  name="anime_s" style="display: none;" value="<?php echo $name ?>" required>
                 <button type="submit" class="btn" style="float: right;"><i class="fa fa-sign-in" aria-hidden="true"></i></button> </form>
@@ -414,7 +461,7 @@
          ?>
        
                <div class="maindiv">
-                <form action="{{  route('search2')}}" method = "get"> 
+                <form action="{{  route('search4')}}" method = "get"> 
                 {{ csrf_field() }}
                 <input type="text"  name="anime_s" style="display: none;" value="<?php echo $name ?>" required>
                 <button type="submit" class="btn" style="float: right;"><i class="fa fa-sign-in" aria-hidden="true"></i></button> </form>
@@ -451,7 +498,7 @@
          ?>
        
                <div class="maindiv">
-                <form action="{{  route('search2')}}" method = "get"> 
+                <form action="{{  route('search4')}}" method = "get"> 
                 {{ csrf_field() }}
                 <input type="text"  name="anime_s" style="display: none;" value="<?php echo $name ?>" required>
                 <button type="submit" class="btn" style="float: right;"><i class="fa fa-sign-in" aria-hidden="true"></i></button> </form>
@@ -488,7 +535,7 @@
          ?>
        
                <div class="maindiv">
-                <form action="{{  route('search2')}}" method = "get"> 
+                <form action="{{  route('search4')}}" method = "get"> 
                 {{ csrf_field() }}
                 <input type="text"  name="anime_s" style="display: none;" value="<?php echo $name ?>" required>
                 <button type="submit" class="btn" style="float: right;"><i class="fa fa-sign-in" aria-hidden="true"></i></button> </form>
@@ -505,7 +552,46 @@
     oci_free_statement($stid4);
     oci_free_statement($curs4);?>
          </div>    
-    </main>
+    
+       </main>
+<script type="text/javascript">
+  
+
+   var ctx = document.getElementById("Chart1");
+   var myChart = new Chart(ctx, {
+      type: 'pie',
+         data: {
+            labels: [
+        'TV',
+        'OVA',
+        'Movie',
+        'Special'
+    ],
+            datasets: [
+               { label: "Anime Type",
+               data:[<?php echo $r1; ?>, <?php echo $r2; ?>, <?php echo $r3; ?>,<?php echo $r4; ?>],
+               backgroundColor :['rgba(75, 192, 192, 0.4)',
+               'rgba(255, 129, 102, 0.4)',
+               'rgba(234, 162, 235, 0.4)',
+               'rgba(255, 206, 36, 0.4)',
+               'rgba(153, 102, 255, 0.4)'
+            ],
+         }
+      ]
+   },
+   options: {
+      scales: {
+         yAxes: [{
+            ticks: {
+               beginAtZero:true
+            }
+         }]
+      }
+   }
+});
+</script>
+
+
 <script type="text/javascript">
   function ons(){
               $("#id2").toggle();

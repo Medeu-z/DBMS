@@ -15,9 +15,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/test', function () {
     return view('test');
 });
-Route::get('/', function () {
+/*Route::get('/', function () {
     return view('home');
-});
+});*/
 Route::get('/al', function () {
     return view('animelist');
 });
@@ -39,6 +39,10 @@ Route::get('/a/acc', function () {
 });
 Route::get('/a/name','App\Http\Controllers\AnimeController@search')->name('search');
 Route::get('/a/name2','App\Http\Controllers\AnimeController@search2')->name('search2');
+
+Route::get('/u/name','App\Http\Controllers\AnimeController@search3')->name('search3');
+Route::get('/u/name2','App\Http\Controllers\AnimeController@search4')->name('search4');
+
 Route::post('/acc/user','App\Http\Controllers\accController@add')->name('add');
 Route::post('/acc/del','App\Http\Controllers\accController@del')->name('del');
 Route::post('/acc/upd','App\Http\Controllers\accController@upd')->name('upd');
