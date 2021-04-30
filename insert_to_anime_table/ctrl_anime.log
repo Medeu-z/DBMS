@@ -1,0 +1,135 @@
+
+SQL*Loader: Release 11.2.0.2.0 - Production on Wed Apr 28 17:10:50 2021
+
+Copyright (c) 1982, 2009, Oracle and/or its affiliates.  All rights reserved.
+
+Control File:   ctrl_anime.txt
+Character Set UTF8 specified for all input.
+
+Data File:      anime.txt
+  Bad File:     anime.bad
+  Discard File:  none specified
+ 
+ (Allow all discards)
+
+Number to load: ALL
+Number to skip: 0
+Errors allowed: 50
+Bind array:     64 rows, maximum of 256000 bytes
+Continuation:    none specified
+Path used:      Conventional
+
+Table ANIME, loaded from every logical record.
+Insert option in effect for this table: INSERT
+
+   Column Name                  Position   Len  Term Encl Datatype
+------------------------------ ---------- ----- ---- ---- ---------------------
+ANIME_ID                            FIRST     *   ,  O(") CHARACTER            
+ANIME_NAME                           NEXT     *   ,  O(") CHARACTER            
+SCORE                                NEXT     *   ,  O(") CHARACTER            
+GENDERS                              NEXT     *   ,  O(") CHARACTER            
+ENGLISHNAME                          NEXT     *   ,  O(") CHARACTER            
+JAPANESENAME                         NEXT     *   ,  O(") CHARACTER            
+ANIME_TYPE                           NEXT     *   ,  O(") CHARACTER            
+EPISODES                             NEXT     *   ,  O(") CHARACTER            
+AIRED                                NEXT     *   ,  O(") CHARACTER            
+PREMIERED                            NEXT     *   ,  O(") CHARACTER            
+PRODUCERS                            NEXT     *   ,  O(") CHARACTER            
+LICENSORS                            NEXT     *   ,  O(") CHARACTER            
+STUDIOS                              NEXT     *   ,  O(") CHARACTER            
+ANIME_SOURCE                         NEXT     *   ,  O(") CHARACTER            
+ANIME_DURATION                       NEXT     *   ,  O(") CHARACTER            
+RATING                               NEXT     *   ,  O(") CHARACTER            
+RANKED                               NEXT     *   ,  O(") CHARACTER            
+POPULARITY                           NEXT     *   ,  O(") CHARACTER            
+MEMBERS                              NEXT     *   ,  O(") CHARACTER            
+FAVORITES                            NEXT     *   ,  O(") CHARACTER            
+WATCHING                             NEXT     *   ,  O(") CHARACTER            
+COMPLETED                            NEXT     *   ,  O(") CHARACTER            
+ONHOLD                               NEXT     *   ,  O(") CHARACTER            
+DROPPED                              NEXT     *   ,  O(") CHARACTER            
+PLANTOWATCH                          NEXT     *   ,  O(") CHARACTER            
+SCORE10                              NEXT     *   ,  O(") CHARACTER            
+SCORE9                               NEXT     *   ,  O(") CHARACTER            
+SCORE8                               NEXT     *   ,  O(") CHARACTER            
+SCORE7                               NEXT     *   ,  O(") CHARACTER            
+SCORE6                               NEXT     *   ,  O(") CHARACTER            
+SCORE5                               NEXT     *   ,  O(") CHARACTER            
+SCORE4                               NEXT     *   ,  O(") CHARACTER            
+SCORE3                               NEXT     *   ,  O(") CHARACTER            
+SCORE2                               NEXT     *   ,  O(") CHARACTER            
+SCORE1                               NEXT     *   ,  O(") CHARACTER            
+IMAGE_FILE_NAME                      NEXT   100   ,  O(") CHARACTER            
+  (FILLER FIELD)
+IMAGE                             DERIVED     *  EOF      CHARACTER            
+    Dynamic LOBFILE.  Filename in field IMAGE_FILE_NAME
+    Character Set UTF8 specified for all input.
+
+value used for ROWS parameter changed from 64 to 28
+Record 1: Rejected - Error on table ANIME, column IMAGE_FILE_NAME.
+Column not found before end of logical record (use TRAILING NULLCOLS)
+Record 2: Rejected - Error on table ANIME, column IMAGE_FILE_NAME.
+Column not found before end of logical record (use TRAILING NULLCOLS)
+Record 4: Rejected - Error on table ANIME, column IMAGE_FILE_NAME.
+Column not found before end of logical record (use TRAILING NULLCOLS)
+Record 7: Rejected - Error on table ANIME, column ANIME_TYPE.
+no terminator found after TERMINATED and ENCLOSED field
+Record 17: Rejected - Error on table ANIME, column IMAGE_FILE_NAME.
+Column not found before end of logical record (use TRAILING NULLCOLS)
+Record 12: Rejected - Error on table ANIME, column EPISODES.
+ORA-01722: invalid number
+
+Record 166: Rejected - Error on table ANIME, column RANKED.
+ORA-01722: invalid number
+
+Record 181: Rejected - Error on table ANIME, column RANKED.
+ORA-01722: invalid number
+
+Record 189: Rejected - Error on table ANIME, column RANKED.
+ORA-01722: invalid number
+
+Record 191: Rejected - Error on table ANIME, column RANKED.
+ORA-01722: invalid number
+
+Record 192: Rejected - Error on table ANIME, column RANKED.
+ORA-01722: invalid number
+
+Record 195: Rejected - Error on table ANIME, column RANKED.
+ORA-01722: invalid number
+
+Record 198: Rejected - Error on table ANIME, column RANKED.
+ORA-01722: invalid number
+
+Record 199: Rejected - Error on table ANIME, column RANKED.
+ORA-01722: invalid number
+
+Record 293: Rejected - Error on table ANIME, column RANKED.
+ORA-01722: invalid number
+
+Record 297: Rejected - Error on table ANIME, column RANKED.
+ORA-01722: invalid number
+
+Record 345: Rejected - Error on table ANIME, column RANKED.
+ORA-01722: invalid number
+
+
+Table ANIME:
+  514 Rows successfully loaded.
+  17 Rows not loaded due to data errors.
+  0 Rows not loaded because all WHEN clauses were failed.
+  0 Rows not loaded because all fields were null.
+
+
+Space allocated for bind array:                 255696 bytes(28 rows)
+Read   buffer bytes: 1048576
+
+Total logical records skipped:          0
+Total logical records read:           531
+Total logical records rejected:        17
+Total logical records discarded:        0
+
+Run began on Wed Apr 28 17:10:50 2021
+Run ended on Wed Apr 28 17:10:51 2021
+
+Elapsed time was:     00:00:00.71
+CPU time was:         00:00:00.14
